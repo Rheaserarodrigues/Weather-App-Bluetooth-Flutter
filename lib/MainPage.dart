@@ -80,15 +80,13 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Bluetooth Serial'),
+        title: const Text('Weather App'),
       ),
       body: Container(
         child: ListView(
           children: <Widget>[
             Divider(),
-            ListTile(
-              title: const Text('General')
-            ),
+
             SwitchListTile(
               title: const Text('Enable Bluetooth'),
               value: _bluetoothState.isEnabled,

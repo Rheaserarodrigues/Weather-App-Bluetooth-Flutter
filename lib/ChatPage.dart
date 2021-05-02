@@ -28,15 +28,17 @@ class _ChatPage extends State<ChatPage> {
   List<_Message> messages = List<_Message>();
   String _messageBuffer = '';
 
-  final TextEditingController textEditingController = new TextEditingController();
+  final TextEditingController textEditingController =
+      new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
 
   bool isConnecting = true;
+
   bool get isConnected => connection != null && connection.isConnected;
 
   bool isDisconnecting = false;
 
-  String weatherData;
+  List<String> _weatherData;
 
   @override
   void initState() {
@@ -59,8 +61,7 @@ class _ChatPage extends State<ChatPage> {
         // If we didn't except this (no flag set), it means closing by remote.
         if (isDisconnecting) {
           print('Disconnecting locally!');
-        }
-        else {
+        } else {
           print('Disconnected remotely!');
         }
         if (this.mounted) {
@@ -87,47 +88,309 @@ class _ChatPage extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    messages.removeRange(0, messages.length-1);
+    messages.removeRange(0, messages.length - 1);
     final List<Row> list = messages.map((_message) {
-
-      return Row(
-        children: <Widget>[
-          Container(
-            child: Text((text) {
-              return text == '/shrug' ? '¯\\_(ツ)_/¯' : text;
-            } (_message.text.trim()), style: TextStyle(color: Colors.white)),
-            padding: EdgeInsets.all(12.0),
-            margin: EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
-            width: 222.0,
-            decoration: BoxDecoration(color: _message.whom == clientID ? Colors.blueAccent : Colors.grey, borderRadius: BorderRadius.circular(7.0)),
-          ),
-        ],
-        mainAxisAlignment: _message.whom == clientID ? MainAxisAlignment.end : MainAxisAlignment.start,
-      );
+      setState(() {
+        _weatherData = _message.text.trim().split(",");
+      });
     }).toList();
     // final List<Row> newList = list.removeRange(1,10);
+    print(_weatherData);
     return Scaffold(
-      appBar: AppBar(
-        title: (
-          isConnecting ? Text('Connecting chat to ' + widget.server.name + '...') :
-          isConnected ? Text('Live chat with ' + widget.server.name) :
-          Text('Chat log with ' + widget.server.name)
-        )
-      ),
-      body: SafeArea(
+      body: SingleChildScrollView(
+
+        // readData();
         child: Column(
           children: <Widget>[
-            Flexible(
-              child: ListView(
-                padding: const EdgeInsets.all(12.0),
-                controller: listScrollController,
-                children: list
-              )
+            SafeArea(
+              child: Container(
+                height: 230,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    // Where the linear gradient begins and ends
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    // Add one stop for each color. Stops should increase from 0 to 1
+                    stops: [0.1, 0.5, 0.7, 0.9],
+                    colors: [
+                      // Colors are easy thanks to Flutter's Colors class.
+                      Colors.blue[900],
+                      Colors.blue[800],
+                      Colors.blue[700],
+                      Colors.blue[500],
+                    ],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(40),
+                    bottomLeft: Radius.circular(40),
+                  ),
+                ),
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     fit: BoxFit.cover,
+                //     colorFilter: ColorFilter.mode(
+                //         Colors.black.withOpacity(0.3), BlendMode.dstATop),
+                //     image: AssetImage('assets/images/weather_img.jpg'),
+                //   ),
+                //   borderRadius: BorderRadius.only(
+                //     bottomRight: Radius.circular(40),
+                //     bottomLeft: Radius.circular(40),
+                //   ),
+                // ),
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      left: 120,
+                      top: 80,
+                      width: 150,
+                      height: 200,
+                      child: Text(
+                        'Temperature',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 20,
+                      top: 40,
+                      width: 70,
+                      height: 200,
+                      child: Container(
+                          child: Image(
+                        image: AssetImage('assets/images/cloudy.png'),
+                      )),
+                    ),
+                    Positioned(
+                      left: 120,
+                      top: 100,
+                      width: 300,
+                      height: 200,
+                      child: Container(
+                        child: Text(
+                          _weatherData[0] + " \u2103" ?? '0.0 \u2103',
+                          style: TextStyle(
+                            fontSize: 45.0,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Text(weatherData == null ? "Data Null" : weatherData)
-          ]
-        )
-      )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/rainy.png'),
+                      ),
+                      Text(_weatherData[3] + " V" ?? '0 V',
+                          style: TextStyle(
+                            fontSize: 25,
+                          )),
+                      Text('Rain')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/humidity.png'),
+                      ),
+                      Text(_weatherData[1] + " %" ?? '0.0 %',
+                          style: TextStyle(
+                            fontSize: 25,
+                          )),
+                      Text('humidity')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/gauge.png'),
+                      ),
+                      Text(_weatherData[6] + " Pa" ?? '0.0 Pa',
+                          style: TextStyle(
+                            fontSize: 25,
+                          )),
+                      Text('Pressure')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/uv-protection.png'),
+                      ),
+                      Text(_weatherData[7] + " " ?? '0.0',
+                          style: TextStyle(
+                            fontSize: 30,
+                          )),
+                      Text('UV Intensity')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/exposure.png'),
+                      ),
+                      Text(_weatherData[4] + " V" ?? '0 Vsssss',
+                          style: TextStyle(
+                            fontSize: 25,
+                          )),
+                      Text('Light')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                      child: Container(
+                          child: Column(
+                    children: <Widget>[
+                      Image(
+                        height: 80,
+                        image: AssetImage('assets/images/heat.png'),
+                      ),
+                      Text(_weatherData[2] + " \u2109" ?? '0.0 \u2109',
+                          style: TextStyle(
+                            fontSize: 25,
+                          )),
+                      Text('heat index')
+                    ],
+                  ))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 6,
+                        blurRadius: 0,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // Text(_altitude ?? 'altitude'),
+            // Text(_heatindex ?? 'heatindex'),
+            // Text(_humidity ?? 'humidity'),
+            // Text(_lightsensor ?? 'lightsensor'),
+            // Text(_rainvalue ?? 'rain'),
+            // Text(_uv ?? 'UV'),
+          ],
+        ),
+      ),
     );
   }
 
@@ -147,12 +410,10 @@ class _ChatPage extends State<ChatPage> {
     for (int i = data.length - 1; i >= 0; i--) {
       if (data[i] == 8 || data[i] == 127) {
         backspacesCounter++;
-      }
-      else {
+      } else {
         if (backspacesCounter > 0) {
           backspacesCounter--;
-        }
-        else {
+        } else {
           buffer[--bufferIndex] = data[i];
         }
       }
@@ -161,25 +422,22 @@ class _ChatPage extends State<ChatPage> {
     // Create message if there is new line character
     String dataString = String.fromCharCodes(buffer);
     int index = buffer.indexOf(13);
-    if (~index != 0) { // \r\n
+    if (~index != 0) {
+      // \r\n
       setState(() {
-        messages.add(_Message(1,
-          backspacesCounter > 0
-            ? _messageBuffer.substring(0, _messageBuffer.length - backspacesCounter)
-            : _messageBuffer
-          + dataString.substring(0, index)
-        ));
+        messages.add(_Message(
+            1,
+            backspacesCounter > 0
+                ? _messageBuffer.substring(
+                    0, _messageBuffer.length - backspacesCounter)
+                : _messageBuffer + dataString.substring(0, index)));
         _messageBuffer = dataString.substring(index);
       });
-    }
-    else {
-      _messageBuffer = (
-        backspacesCounter > 0
-          ? _messageBuffer.substring(0, _messageBuffer.length - backspacesCounter)
-          : _messageBuffer
-        + dataString
-      );
+    } else {
+      _messageBuffer = (backspacesCounter > 0
+          ? _messageBuffer.substring(
+              0, _messageBuffer.length - backspacesCounter)
+          : _messageBuffer + dataString);
     }
   }
-
 }
