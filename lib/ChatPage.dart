@@ -294,10 +294,20 @@ class _ChatPage extends State<ChatPage> {
                         height: 80,
                         image: AssetImage('assets/images/uv-protection.png'),
                       ),
-                      Text(_weatherData[7] + " " ?? '0.0',
-                          style: TextStyle(
-                            fontSize: 30,
-                          )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(_weatherData[7] + "" ?? '0.0',
+                              style: TextStyle(
+                                fontSize: 30,
+                              )),
+                          Text( "mW/cm \u00B2",
+                              style: TextStyle(
+                                fontSize: 15,
+                              )),
+                        ],
+                      ),
                       Text('UV Intensity')
                     ],
                   ))),
@@ -330,7 +340,7 @@ class _ChatPage extends State<ChatPage> {
                         height: 80,
                         image: AssetImage('assets/images/exposure.png'),
                       ),
-                      Text(_weatherData[4] + " V" ?? '0 Vsssss',
+                      Text(_weatherData[4] + " V" ?? '0 V',
                           style: TextStyle(
                             fontSize: 25,
                           )),
@@ -361,11 +371,11 @@ class _ChatPage extends State<ChatPage> {
                         height: 80,
                         image: AssetImage('assets/images/heat.png'),
                       ),
-                      Text(_weatherData[2] + " \u2109" ?? '0.0 \u2109',
+                      Text(_weatherData[2] + " \u2103" ?? "0.0 \u2103",
                           style: TextStyle(
                             fontSize: 25,
                           )),
-                      Text('heat index')
+                      Text('Heat Index')
                     ],
                   ))),
                   decoration: BoxDecoration(
