@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:lottie/lottie.dart';
+import 'package:snl_mini_project/main.dart';
 
 class ChatPage extends StatefulWidget {
   final BluetoothDevice server;
@@ -88,317 +90,337 @@ class _ChatPage extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    messages.removeRange(0, messages.length - 1);
+
     final List<Row> list = messages.map((_message) {
       setState(() {
         _weatherData = _message.text.trim().split(",");
+
       });
     }).toList();
+    if (messages.length > 0) {
+      messages.removeRange(0, messages.length - 1);
+    }
+
+
     // final List<Row> newList = list.removeRange(1,10);
     print(_weatherData);
     return Scaffold(
-      body: SingleChildScrollView(
+      body: _weatherData == null ? Container ():Container(
+        color:int.parse(_weatherData[4])==0?Colors.white:Colors.black,
+        child: SingleChildScrollView(
 
-        // readData();
-        child: Column(
-          children: <Widget>[
-            SafeArea(
-              child: Container(
-                height: 230,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    // Where the linear gradient begins and ends
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    // Add one stop for each color. Stops should increase from 0 to 1
-                    stops: [0.1, 0.5, 0.7, 0.9],
-                    colors: [
-                      // Colors are easy thanks to Flutter's Colors class.
-                      Colors.blue[900],
-                      Colors.blue[800],
-                      Colors.blue[700],
-                      Colors.blue[500],
-                    ],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(40),
-                    bottomLeft: Radius.circular(40),
-                  ),
-                ),
-                // decoration: BoxDecoration(
-                //   image: DecorationImage(
-                //     fit: BoxFit.cover,
-                //     colorFilter: ColorFilter.mode(
-                //         Colors.black.withOpacity(0.3), BlendMode.dstATop),
-                //     image: AssetImage('assets/images/weather_img.jpg'),
-                //   ),
-                //   borderRadius: BorderRadius.only(
-                //     bottomRight: Radius.circular(40),
-                //     bottomLeft: Radius.circular(40),
-                //   ),
-                // ),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: 120,
-                      top: 80,
-                      width: 150,
-                      height: 200,
-                      child: Text(
-                        'Temperature',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+
+          // readData();
+          child: Column(
+
+            children: <Widget>[
+              SafeArea(
+
+                child: Container(
+                  height: 230,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      // Where the linear gradient begins and ends
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      // Add one stop for each color. Stops should increase from 0 to 1
+                      stops: [0.1, 0.5, 0.7, 0.9],
+                      colors: [
+                        // Colors are easy thanks to Flutter's Colors class.
+                        Colors.blue[900],
+                        Colors.blue[800],
+                        Colors.blue[700],
+                        Colors.blue[500],
+                      ],
                     ),
-                    Positioned(
-                      left: 20,
-                      top: 40,
-                      width: 70,
-                      height: 200,
-                      child: Container(
-                          child: Image(
-                        image: AssetImage('assets/images/cloudy.png'),
-                      )),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(40),
                     ),
-                    Positioned(
-                      left: 120,
-                      top: 100,
-                      width: 300,
-                      height: 200,
-                      child: Container(
+                  ),
+                  // decoration: BoxDecoration(
+                  //   image: DecorationImage(
+                  //     fit: BoxFit.cover,
+                  //     colorFilter: ColorFilter.mode(
+                  //         Colors.black.withOpacity(0.3), BlendMode.dstATop),
+                  //     image: AssetImage('assets/images/weather_img.jpg'),
+                  //   ),
+                  //   borderRadius: BorderRadius.only(
+                  //     bottomRight: Radius.circular(40),
+                  //     bottomLeft: Radius.circular(40),
+                  //   ),
+                  // ),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 120,
+                        top: 80,
+                        width: 150,
+                        height: 200,
                         child: Text(
-                          _weatherData[0] + " \u2103" ?? '0.0 \u2103',
+                          'Temperature',
                           style: TextStyle(
-                            fontSize: 45.0,
-                            fontWeight: FontWeight.w800,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        left: 20,
+                        top: 40,
+                        width: 70,
+                        height: 200,
+                        child: Container(
+                            child: Image(
+                          image: AssetImage('assets/images/cloudy.png'),
+                        )),
+                      ),
+                      Positioned(
+                        left: 120,
+                        top: 100,
+                        width: 300,
+                        height: 200,
+                        child: Container(
+                          child: Text(
+                            _weatherData[0] + " \u2103" ?? '0.0 \u2103',
+                            style: TextStyle(
+                              fontSize: 45.0,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/rainy.png'),
-                      ),
-                      Text(_weatherData[3] + " V" ?? '0 V',
-                          style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text('Rain')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
+              Row(
+
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        Image(
+                          height: 80,
+                          image: AssetImage('assets/images/rainy.png'),
+                        ),
+                        Text(_weatherData[3] + " V" ?? '0 V',
+                            style: TextStyle(
+                              fontSize: 25,
+                            )),
+                        Text('Rain')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/humidity.png'),
-                      ),
-                      Text(_weatherData[1] + " %" ?? '0.0 %',
-                          style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text('humidity')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        Image(
+                          height: 80,
+                          image: AssetImage('assets/images/humidity.png'),
+                        ),
+                        Text(_weatherData[1] + " %" ?? '0.0 %',
+                            style: TextStyle(
+                              fontSize: 25,
+                            )),
+                        Text('humidity')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/gauge.png'),
-                      ),
-                      Text(_weatherData[6] + " Pa" ?? '0.0 Pa',
-                          style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text('Pressure')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        Image(
+                          height: 80,
+                          image: AssetImage('assets/images/gauge.png'),
+                        ),
+                        Text(_weatherData[6] + " Pa" ?? '0.0 Pa',
+                            style: TextStyle(
+                              fontSize: 25,
+                            )),
+                        Text('Pressure')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/uv-protection.png'),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(_weatherData[7] + "" ?? '0.0',
-                              style: TextStyle(
-                                fontSize: 30,
-                              )),
-                          Text( "mW/cm \u00B2",
-                              style: TextStyle(
-                                fontSize: 15,
-                              )),
-                        ],
-                      ),
-                      Text('UV Intensity')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        Image(
+                          height: 80,
+                          image: AssetImage('assets/images/uv-protection.png'),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(_weatherData[7] + "" ?? '0.0',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                )),
+                            Text( "mW/cm \u00B2",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )),
+                          ],
+                        ),
+                        Text('UV Intensity')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/exposure.png'),
-                      ),
-                      Text(_weatherData[4] + " V" ?? '0 V',
-                          style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text('Light')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        int.parse(_weatherData[4]) == 0 ? Lottie.asset(
+                          'assets/lottie/day.json',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.fill,
+                        ):  Lottie.asset(
+                          'assets/lottie/night.json',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.fill,
+                        ),
+                        Text(_weatherData[4] + " V" ?? '0 V',
+                            style: TextStyle(
+                              fontSize: 25,
+                            )),
+                        Text('Light')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          child: Column(
-                    children: <Widget>[
-                      Image(
-                        height: 80,
-                        image: AssetImage('assets/images/heat.png'),
-                      ),
-                      Text(_weatherData[2] + " \u2103" ?? "0.0 \u2103",
-                          style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text('Heat Index')
-                    ],
-                  ))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 6,
-                        blurRadius: 0,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                        child: Container(
+                            child: Column(
+                      children: <Widget>[
+                        Image(
+                          height: 80,
+                          image: AssetImage('assets/images/heat.png'),
+                        ),
+                        Text(_weatherData[2] + " \u2103" ?? "0.0 \u2103",
+                            style: TextStyle(
+                              fontSize: 25,
+                            )),
+                        Text('Heat Index')
+                      ],
+                    ))),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          spreadRadius: 6,
+                          blurRadius: 0,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            // Text(_altitude ?? 'altitude'),
-            // Text(_heatindex ?? 'heatindex'),
-            // Text(_humidity ?? 'humidity'),
-            // Text(_lightsensor ?? 'lightsensor'),
-            // Text(_rainvalue ?? 'rain'),
-            // Text(_uv ?? 'UV'),
-          ],
+                ],
+              ),
+              // Text(_altitude ?? 'altitude'),
+              // Text(_heatindex ?? 'heatindex'),
+              // Text(_humidity ?? 'humidity'),
+              // Text(_lightsensor ?? 'lightsensor'),
+              // Text(_rainvalue ?? 'rain'),
+              // Text(_uv ?? 'UV'),
+            ],
+          ),
         ),
       ),
     );

@@ -60,6 +60,8 @@ flutter:
     - assets/images/weatherapp.png
     - assets/lottie/bluetooth.json
     - assets/lottie/weather.json
+    - assets/lottie/day.json
+    - assets/lottie/night.json
 
 
   # To add assets to your application, add an assets section, like this:

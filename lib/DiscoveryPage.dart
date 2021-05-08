@@ -120,7 +120,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Error occured while bonding'),
+                      title: const Text('Error occurred while bonding'),
                       content: Text("${ex.toString()}"),
                       actions: <Widget>[
                         new FlatButton(
