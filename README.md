@@ -1,4 +1,4 @@
-# snl_mini_project
+# Weather App Flutter
 
 A new Flutter project.
 
