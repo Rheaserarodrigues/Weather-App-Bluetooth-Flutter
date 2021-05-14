@@ -1,18 +1,17 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:lottie/lottie.dart';
-import 'package:snl_mini_project/main.dart';
 
-class ChatPage extends StatefulWidget {
+
+class WeatherDisplayWidget extends StatefulWidget {
   final BluetoothDevice server;
 
-  const ChatPage({this.server});
+  const WeatherDisplayWidget({this.server});
 
   @override
-  _ChatPage createState() => new _ChatPage();
+  _WeatherDisplayWidget createState() => new _WeatherDisplayWidget();
 }
 
 class _Message {
@@ -22,7 +21,7 @@ class _Message {
   _Message(this.whom, this.text);
 }
 
-class _ChatPage extends State<ChatPage> {
+class _WeatherDisplayWidget extends State<WeatherDisplayWidget> {
   static final clientID = 0;
   static final maxMessageLength = 4096 - 3;
   BluetoothConnection connection;
@@ -105,7 +104,25 @@ class _ChatPage extends State<ChatPage> {
     // final List<Row> newList = list.removeRange(1,10);
     print(_weatherData);
     return Scaffold(
-      body: _weatherData == null ? Container ():Container(
+      body: _weatherData== null? Container (
+        margin: EdgeInsets.only(
+          top:100
+        ),
+        child:Center(
+          child: Column(
+            children: <Widget>[
+                Lottie.asset(
+                  'assets/lottie/bluetooth.json',
+                  width: 350,
+                  height: 350,
+                  fit: BoxFit.fill,
+                ),
+                Text('Connecting To Device',style: Theme.of(context).textTheme.headline2,)
+
+            ],
+          ),
+        ),
+      ):Container(
         color:int.parse(_weatherData[4])==0?Colors.white:Colors.black,
         child: SingleChildScrollView(
 
@@ -166,13 +183,22 @@ class _ChatPage extends State<ChatPage> {
                       ),
                       Positioned(
                         left: 20,
-                        top: 40,
-                        width: 70,
-                        height: 200,
+                        top: 60,
+                        width: 100,
+                        height: 100,
                         child: Container(
-                            child: Image(
-                          image: AssetImage('assets/images/cloudy.png'),
-                        )),
+                            child:int.parse(_weatherData[4])==0 ? Lottie.asset(
+                          'assets/lottie/day.json',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.fill,
+                        ):Lottie.asset(
+                          'assets/lottie/night.json',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.fill,
+                        ) ,
+                        ),
                       ),
                       Positioned(
                         left: 120,
@@ -206,10 +232,27 @@ class _ChatPage extends State<ChatPage> {
                         child: Container(
                             child: Column(
                       children: <Widget>[
-                        Image(
-                          height: 80,
-                          image: AssetImage('assets/images/rainy.png'),
-                        ),
+                        if(double.parse(_weatherData[3])<=4095 && double.parse(_weatherData[3])>3500 )
+                          Lottie.asset(
+                            'assets/lottie/NoRain.json',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        if(double.parse(_weatherData[3])<=3500 && double.parse(_weatherData[3])>2500 )
+                          Lottie.asset(
+                            'assets/lottie/LightRain.json',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        if(double.parse(_weatherData[3])<=2500 && double.parse(_weatherData[3])>0 )
+                          Lottie.asset(
+                            'assets/lottie/heavyRain.json',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
                         Text(_weatherData[3] + " V" ?? '0 V',
                             style: TextStyle(
                               fontSize: 25,
@@ -365,7 +408,7 @@ class _ChatPage extends State<ChatPage> {
                             style: TextStyle(
                               fontSize: 25,
                             )),
-                        Text('Light')
+                        Text(int.parse(_weatherData[4]) == 0 ? 'Day' : 'Night')
                       ],
                     ))),
                     decoration: BoxDecoration(
