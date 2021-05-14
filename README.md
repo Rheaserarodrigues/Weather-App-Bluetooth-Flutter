@@ -1,6 +1,19 @@
-# Weather App Flutter
+<h1> Weather App Flutter </h1>
+<h3>Credits to <a href="https://github.com/ankita-1812"> Ankita Tripathi</a> For the UI </h3>
+<table style="border:1px solid black">
+    <tbody>
+        <tr>
+            <td colspan="3"><div align="center"><h2></h2></div></td>
+        </tr>
+    <tr>
+       <td style="text-align:center"><div align="center"><h2> Day Time </h2> <img src="https://media.giphy.com/media/ogjmL3CEvixxsVFsqW/giphy.gif" /></div></td>
+        <td style="text-align:center"><div align="center"><h2> Night Time </h2> <img src="https://media.giphy.com/media/MYX3Zi84Q6eFmc6ysF/giphy.gif" /></div></td>
 
-A new Flutter project.
+</tr>
+ 
+</tbody>
+</table>
+
 
 ## Getting Started
 
