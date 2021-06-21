@@ -1,4 +1,5 @@
 <h1> Weather App Flutter </h1>
+<h2> An IOT Project made with ESP32, where the esp32 was connected to many sensors and the data was being sent through Bluetooth and the Data was being received on the Flutter App Made</h2>
 <h3>Credits to <a href="https://github.com/ankita-1812"> Ankita Tripathi</a> For the UI </h3>
 <table style="border:1px solid black">
     <tbody>
